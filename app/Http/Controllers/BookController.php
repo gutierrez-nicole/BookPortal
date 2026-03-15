@@ -34,7 +34,6 @@ class BookController extends Controller
             'author' => 'required',
             'genre' => 'required',
             'isbn' => 'required|unique:books',
-            'price' => 'required|numeric|min:0',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -72,7 +71,6 @@ class BookController extends Controller
             'author' => 'required',
             'genre' => 'required',
             'isbn' => 'required|unique:books,isbn,'.$book->id,
-            'price' => 'required|numeric|min:0',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -188,17 +186,14 @@ class BookController extends Controller
             $items[] = [
                 'book_id' => $book->id,
                 'title' => $book->title,
-                'price' => (float) $book->price,
                 'quantity' => 1,
             ];
         }
 
-        $total = collect($items)->sum(fn($i) => $i['price'] * $i['quantity']);
-
         $receipt = Receipt::create([
             'borrower_name' => $data['borrower_name'],
             'items' => $items,
-            'total_amount' => $total,
+            'total_amount' => 0,
             'transaction_date' => now(),
         ]);
 

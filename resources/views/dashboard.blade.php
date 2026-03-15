@@ -797,7 +797,6 @@
                             <div class="book-meta">
                                 <div class="book-title">{{ $book->title }}</div>
                                 <div class="book-author">{{ $book->author }}</div>
-                                <div class="book-price">₱{{ number_format($book->price ?? 0, 2) }}</div>
                                 <div class="book-badges">
                                     <span class="badge {{ $book->available ? 'badge-available' : 'badge-borrowed' }}">
                                         {{ $book->available ? 'Available' : 'Borrowed' }}
