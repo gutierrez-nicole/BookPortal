@@ -757,6 +757,25 @@
                         </div>
                     </div>
 
+                    {{-- Price --}}
+                    <div class="field">
+                        <label class="field-label" for="price">Price <span class="required">*</span></label>
+                        <input
+                            id="price" name="price" type="number"
+                            step="0.01" min="0"
+                            class="field-input {{ $errors->has('price') ? 'has-error' : '' }}"
+                            value="{{ old('price', $book->price) }}"
+                            placeholder="e.g. 150.00"
+                            required
+                        />
+                        @error('price')
+                            <div class="field-error">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
                 </div>
 
                 <div class="form-actions">

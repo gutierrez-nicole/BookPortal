@@ -155,6 +155,35 @@
             color: rgba(255,255,255,0.3);
         }
 
+        .sidebar-logout {
+            margin-top: 0.85rem;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 0.75rem;
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.3);
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.07);
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+            letter-spacing: 0.02em;
+        }
+
+        .sidebar-logout:hover {
+            background: rgba(181,69,27,0.15);
+            color: #e8a090;
+            border-color: rgba(181,69,27,0.25);
+        }
+
+        .sidebar-logout svg { opacity: 0.6; flex-shrink: 0; transition: opacity 0.15s; }
+        .sidebar-logout:hover svg { opacity: 1; }
+
         /* ── Main content ─────────────────────────────── */
         .main {
             margin-left: var(--sidebar-w);
@@ -623,6 +652,18 @@
                 <div class="sidebar-user-role">Administrator</div>
             </div>
         </div>
+
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="sidebar-logout">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+                    <polyline points="16 17 21 12 16 7"/>
+                    <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                Sign Out
+            </button>
+        </form>
     </div>
 
 </aside>
@@ -756,6 +797,7 @@
                             <div class="book-meta">
                                 <div class="book-title">{{ $book->title }}</div>
                                 <div class="book-author">{{ $book->author }}</div>
+                                <div class="book-price">₱{{ number_format($book->price ?? 0, 2) }}</div>
                                 <div class="book-badges">
                                     <span class="badge {{ $book->available ? 'badge-available' : 'badge-borrowed' }}">
                                         {{ $book->available ? 'Available' : 'Borrowed' }}

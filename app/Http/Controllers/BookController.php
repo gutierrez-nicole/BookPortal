@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\ActivityLog;
 use App\Models\Book;
 use App\Models\Loan;
+use App\Models\Receipt;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -33,6 +34,7 @@ class BookController extends Controller
             'author' => 'required',
             'genre' => 'required',
             'isbn' => 'required|unique:books',
+            'price' => 'required|numeric|min:0',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -70,6 +72,7 @@ class BookController extends Controller
             'author' => 'required',
             'genre' => 'required',
             'isbn' => 'required|unique:books,isbn,'.$book->id,
+            'price' => 'required|numeric|min:0',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -139,6 +142,68 @@ class BookController extends Controller
 
         $pdf = Pdf::loadView('pdf.receipt', compact('loan', 'book'));
         return $pdf->download('receipt-'.$loan->id.'.pdf');
+    }
+
+    // === BULK BORROW ===
+    public function borrowBulk(Request $request)
+    {
+        $data = $request->validate([
+            'borrower_name' => 'required|string|max:255',
+            'due_date' => 'required|date|after:today',
+            'book_ids' => 'required|array|min:2',
+            'book_ids.*' => 'integer|exists:books,id',
+        ]);
+
+        // Load books and verify all are available
+        $books = Book::whereIn('id', $data['book_ids'])->lockForUpdate()->get();
+        if ($books->count() !== count($data['book_ids'])) {
+            return back()->with('error', 'Some books could not be found.');
+        }
+
+        $unavailable = $books->where('available', false)->pluck('title')->toArray();
+        if (!empty($unavailable)) {
+            return back()->with('error', 'These books are not available: '.implode(', ', $unavailable));
+        }
+
+        // Create loans and mark books unavailable
+        $items = [];
+        foreach ($books as $book) {
+            $loan = Loan::create([
+                'book_id' => $book->id,
+                'borrower_name' => $data['borrower_name'],
+                'borrowed_at' => now(),
+                'due_date' => $data['due_date'],
+            ]);
+
+            $book->update(['available' => false]);
+
+            ActivityLog::create([
+                'user_id' => auth()->id(),
+                'action' => 'borrowed_book',
+                'subject_type' => Book::class,
+                'subject_id' => $book->id,
+                'metadata' => ['loan_id' => $loan->id, 'borrower' => $loan->borrower_name],
+            ]);
+
+            $items[] = [
+                'book_id' => $book->id,
+                'title' => $book->title,
+                'price' => (float) $book->price,
+                'quantity' => 1,
+            ];
+        }
+
+        $total = collect($items)->sum(fn($i) => $i['price'] * $i['quantity']);
+
+        $receipt = Receipt::create([
+            'borrower_name' => $data['borrower_name'],
+            'items' => $items,
+            'total_amount' => $total,
+            'transaction_date' => now(),
+        ]);
+
+        // Render receipt HTML page with option to download PDF
+        return redirect()->route('loans.index')->with('success', 'Borrowed '.count($items).' books. Receipt #'.$receipt->id.' generated.');
     }
 
     // === RETURN ===

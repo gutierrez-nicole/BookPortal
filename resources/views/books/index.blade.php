@@ -744,6 +744,7 @@
                         <th>Title</th>
                         <th>Author</th>
                         <th>Genre</th>
+                        <th>Price</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -777,6 +778,15 @@
                             <td>
                                 @if($book->genre)
                                     <span class="genre-pill">{{ $book->genre }}</span>
+                                @else
+                                    <span style="color:var(--rule); font-size:0.75rem;">—</span>
+                                @endif
+                            </td>
+
+                            {{-- Price --}}
+                            <td>
+                                @if(isset($book->price))
+                                    ₱{{ number_format($book->price, 2) }}
                                 @else
                                     <span style="color:var(--rule); font-size:0.75rem;">—</span>
                                 @endif

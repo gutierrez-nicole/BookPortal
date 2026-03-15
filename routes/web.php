@@ -29,6 +29,7 @@ Route::middleware(['auth', \App\Http\Middleware\EnsureUserIsAdmin::class])->grou
     Route::get('activity', [ActivityLogController::class, 'index'])->name('activity.index');
 
     Route::post('books/{book}/borrow', [BookController::class, 'borrow'])->name('books.borrow');
+    Route::post('books/borrow/bulk', [BookController::class, 'borrowBulk'])->name('books.borrow.bulk');
     Route::patch('books/{book}/return', [BookController::class, 'returnBook'])->name('books.return');
 
     // Admin management
