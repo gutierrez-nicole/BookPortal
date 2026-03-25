@@ -864,29 +864,29 @@
                     </div>
                 </div>
 
-                {{-- Danger zone --}}
-                <div class="danger-zone">
-                    <div class="card-header">
-                        <div class="card-header-icon red">⚠️</div>
-                        <span class="card-header-title" style="color: var(--accent);">Danger Zone</span>
-                    </div>
-                    <div class="danger-body">
-                        <p>Permanently deleting this book cannot be undone. All associated loan and reservation records may be affected.</p>
-                        <form action="{{ route('books.destroy', $book) }}" method="POST"
-                              onsubmit="return confirm('Permanently delete \'{{ addslashes($book->title) }}\'? This cannot be undone.');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn-danger">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-                                Delete This Book
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
             </div>
         </div>
     </form>
+
+    {{-- Danger zone --}}
+    <div class="danger-zone">
+        <div class="card-header">
+            <div class="card-header-icon red">⚠️</div>
+            <span class="card-header-title" style="color: var(--accent);">Danger Zone</span>
+        </div>
+        <div class="danger-body">
+            <p>Permanently deleting this book cannot be undone. All associated loan and reservation records may be affected.</p>
+            <form action="{{ route('books.destroy', $book) }}" method="POST"
+                  onsubmit="return confirm('Permanently delete \'{{ addslashes($book->title) }}\'? This cannot be undone.');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn-danger">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                    Delete This Book
+                </button>
+            </form>
+        </div>
+    </div>
 
 </main>
 

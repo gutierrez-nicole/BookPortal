@@ -75,7 +75,15 @@ class BookController extends Controller
         ]);
 
         if ($request->hasFile('cover_image')) {
+            // Delete the previous cover file when replacing it to keep storage clean.
+            if ($book->cover_image) {
+                \Storage::disk('public')->delete($book->cover_image);
+            }
+
             $data['cover_image'] = $request->file('cover_image')->store('covers', 'public');
+        } else {
+            // Preserve the existing cover image when no new file is uploaded.
+            unset($data['cover_image']);
         }
 
         $book->update($data);
@@ -88,7 +96,7 @@ class BookController extends Controller
             'metadata' => ['title' => $book->title, 'isbn' => $book->isbn],
         ]);
 
-        return redirect()->route('books.index')->with('success', 'Book updated!');
+        return redirect()->route('books.show', $book)->with('success', 'Book updated!');
     }
 
     public function destroy(Book $book)
