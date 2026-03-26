@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BookPortal — Books</title>
+    <title>BookPortal — Inventory</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -160,26 +160,8 @@
         }
 
         .page-title span { font-style: italic; color: var(--muted); }
+
         .page-subtitle { font-size: 0.8rem; color: var(--muted); margin-top: 0.4rem; }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            padding: 0.55rem 1.2rem;
-            background: var(--accent);
-            color: #fff;
-            font-size: 0.82rem;
-            font-weight: 600;
-            border-radius: 8px;
-            text-decoration: none;
-            border: none;
-            cursor: pointer;
-            transition: background 0.15s, transform 0.1s;
-            letter-spacing: 0.02em;
-        }
-
-        .btn-primary:hover { background: #9b3a15; transform: translateY(-1px); }
 
         /* ── Flash messages ──────────────────────────── */
         .flash {
@@ -198,116 +180,6 @@
 
         .flash-success { background: var(--teal-lt); color: var(--teal); border: 1px solid #b0d8d2; }
         .flash-error   { background: var(--accent-lt); color: var(--accent); border: 1px solid #e8c4b8; }
-
-        /* ── Filter panel ────────────────────────────── */
-        .filter-panel {
-            background: #fff;
-            border: 1px solid var(--rule);
-            border-radius: 14px;
-            padding: 1.25rem 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .filter-panel-label {
-            font-size: 0.67rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--muted);
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .filter-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 180px 160px auto auto;
-            gap: 0.75rem;
-            align-items: end;
-        }
-
-        .filter-field { display: flex; flex-direction: column; gap: 0.3rem; }
-
-        .filter-field label {
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--muted);
-        }
-
-        .filter-field input,
-        .filter-field select {
-            height: 36px;
-            padding: 0 0.75rem;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.82rem;
-            color: var(--ink);
-            background: var(--cream);
-            border: 1px solid var(--rule);
-            border-radius: 8px;
-            outline: none;
-            transition: border-color 0.15s, box-shadow 0.15s;
-            appearance: none;
-            -webkit-appearance: none;
-        }
-
-        .filter-field input:focus,
-        .filter-field select:focus {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(201,151,58,0.12);
-        }
-
-        .select-wrapper { position: relative; }
-
-        .select-wrapper::after {
-            content: '';
-            position: absolute;
-            right: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 0; height: 0;
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
-            border-top: 5px solid var(--muted);
-            pointer-events: none;
-        }
-
-        .btn-filter {
-            height: 36px;
-            padding: 0 1.1rem;
-            background: var(--ink);
-            color: #fff;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.15s;
-            white-space: nowrap;
-        }
-
-        .btn-filter:hover { background: #2e2a27; }
-
-        .btn-clear {
-            height: 36px;
-            padding: 0 1rem;
-            background: transparent;
-            color: var(--muted);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.78rem;
-            font-weight: 500;
-            border: 1px solid var(--rule);
-            border-radius: 8px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            transition: border-color 0.15s, color 0.15s;
-            white-space: nowrap;
-        }
-
-        .btn-clear:hover { border-color: var(--muted); color: var(--ink); }
 
         /* ── Table card ───────────────────────────────── */
         .table-card {
@@ -448,45 +320,6 @@
             white-space: nowrap;
         }
 
-        /* Status badges */
-        .status-available {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.68rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            padding: 3px 10px;
-            border-radius: 20px;
-            background: var(--teal-lt);
-            color: var(--teal);
-        }
-
-        .status-borrowed {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.68rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            padding: 3px 10px;
-            border-radius: 20px;
-            background: var(--gold-lt);
-            color: #8a6115;
-        }
-
-        .status-dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            display: inline-block;
-            flex-shrink: 0;
-        }
-
-        .status-available .status-dot { background: var(--teal); }
-        .status-borrowed  .status-dot { background: var(--gold); }
-
         /* Actions cell */
         .actions-cell {
             text-align: right;
@@ -510,12 +343,10 @@
         }
 
         .action-view  { color: var(--teal);   border-color: #b0d8d2; }
-        .action-edit  { color: #2563eb;        border-color: #bfdbfe; }
-        .action-delete{ color: var(--accent);  border-color: #e8c4b8; }
+        .action-borrow{ color: var(--accent); border-color: #e8c4b8; }
 
         .action-view:hover   { background: var(--teal-lt); }
-        .action-edit:hover   { background: #eff6ff; }
-        .action-delete:hover { background: var(--accent-lt); }
+        .action-borrow:hover { background: var(--accent-lt); }
 
         /* Empty state */
         .empty-state {
@@ -546,15 +377,10 @@
         }
 
         /* ── Responsive ───────────────────────────────── */
-        @media (max-width: 1200px) {
-            .filter-grid { grid-template-columns: 1fr 1fr; }
-        }
-
         @media (max-width: 700px) {
             :root { --sidebar-w: 0px; }
             .sidebar { display: none; }
             .main { padding: 1.5rem 1rem 3rem; }
-            .filter-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -670,13 +496,9 @@
     {{-- Page Header --}}
     <div class="page-header">
         <div>
-            <h1 class="page-title">Book <span>Catalogue</span></h1>
-            <p class="page-subtitle">Search, filter, and manage your entire library collection.</p>
+            <h1 class="page-title">Book <span>Inventory</span></h1>
+            <p class="page-subtitle">Available books in your library, listed alphabetically.</p>
         </div>
-        <a href="{{ route('books.create') }}" class="btn-primary">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add Book
-        </a>
     </div>
 
     {{-- Flash Messages --}}
@@ -694,55 +516,12 @@
         </div>
     @endif
 
-    {{-- Filter Panel --}}
-    <div class="filter-panel">
-        <div class="filter-panel-label">Filter Books</div>
-        <form method="GET">
-            <div class="filter-grid">
-                <div class="filter-field">
-                    <label for="title">Title</label>
-                    <input id="title" name="title" type="text" placeholder="Search by title…" value="{{ request('title') }}" />
-                </div>
-                <div class="filter-field">
-                    <label for="author">Author</label>
-                    <input id="author" name="author" type="text" placeholder="Search by author…" value="{{ request('author') }}" />
-                </div>
-                <div class="filter-field">
-                    <label for="genre">Genre</label>
-                    <div class="select-wrapper">
-                        <select id="genre" name="genre">
-                            <option value="">All Genres</option>
-                            @foreach($genres as $genre)
-                                <option value="{{ $genre }}" @selected(request('genre') === $genre)>{{ $genre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="filter-field">
-                    <label for="available">Availability</label>
-                    <div class="select-wrapper">
-                        <select id="available" name="available">
-                            <option value="">Any Status</option>
-                            <option value="1" @selected(request('available') === '1')>Available</option>
-                            <option value="0" @selected(request('available') === '0')>Borrowed</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" class="btn-filter">Filter</button>
-                <a href="{{ route('books.index') }}" class="btn-clear">Clear</a>
-            </div>
-        </form>
-    </div>
-
     {{-- Table Card --}}
     <div class="table-card">
         <div class="table-card-header">
             <span class="table-count">
-                Showing <strong>{{ $books->count() }}</strong> of <strong>{{ $books->total() }}</strong> books
+                Showing <strong>{{ $books->count() }}</strong> of <strong>{{ $books->total() }}</strong> available books
             </span>
-            @if(request()->hasAny(['title','author','genre','available']))
-                <span style="font-size:0.72rem; color:var(--accent); font-weight:600;">Filtered results</span>
-            @endif
         </div>
 
         <div style="overflow-x: auto;">
@@ -753,7 +532,6 @@
                         <th>Title</th>
                         <th>Author</th>
                         <th>Genre</th>
-                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -791,47 +569,30 @@
                                 @endif
                             </td>
 
-                            {{-- Status --}}
-                            <td>
-                                @if($book->available)
-                                    <span class="status-available">
-                                        <span class="status-dot"></span> Available
-                                    </span>
-                                @else
-                                    <span class="status-borrowed">
-                                        <span class="status-dot"></span> Borrowed
-                                    </span>
-                                @endif
-                            </td>
-
                             {{-- Actions --}}
                             <td class="actions-cell">
                                 <a href="{{ route('books.show', $book) }}" class="action-btn action-view">
                                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                                     View
                                 </a>
-                                <a href="{{ route('books.edit', $book) }}" class="action-btn action-edit">
-                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                                    Edit
-                                </a>
-                                <form action="{{ route('books.destroy', $book) }}" method="POST" class="inline"
-                                      onsubmit="return confirm('Delete {{ addslashes($book->title) }}? This cannot be undone.');">
+                                <form action="{{ route('books.borrow', $book) }}" method="POST" class="inline">
                                     @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="action-btn action-delete">
-                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-                                        Delete
+                                    <input type="hidden" name="borrower_name" value="{{ auth()->user()->name ?? 'Administrator' }}" />
+                                    <input type="hidden" name="due_date" value="{{ now()->addDays(14)->format('Y-m-d') }}" />
+                                    <button type="submit" class="action-btn action-borrow">
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                                        Borrow
                                     </button>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6">
+                            <td colspan="5">
                                 <div class="empty-state">
                                     <div class="empty-icon">📚</div>
-                                    <div class="empty-title">No books found</div>
-                                    <div class="empty-sub">Try adjusting your filters or add a new book.</div>
+                                    <div class="empty-title">No available books</div>
+                                    <div class="empty-sub">All books are currently borrowed or none have been added yet.</div>
                                 </div>
                             </td>
                         </tr>

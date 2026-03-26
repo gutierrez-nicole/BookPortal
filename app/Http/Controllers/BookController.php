@@ -99,22 +99,13 @@ class BookController extends Controller
         return redirect()->route('books.show', $book)->with('success', 'Book updated!');
     }
 
-    public function destroy(Book $book)
+    public function inventory()
     {
-        if ($book->cover_image) {
-            \Storage::disk('public')->delete($book->cover_image);
-        }
-        $book->delete();
+        $books = Book::where('available', true)
+            ->orderBy('title')
+            ->paginate(12);
 
-        ActivityLog::create([
-            'user_id' => auth()->id(),
-            'action' => 'deleted_book',
-            'subject_type' => Book::class,
-            'subject_id' => $book->id,
-            'metadata' => ['title' => $book->title, 'isbn' => $book->isbn],
-        ]);
-
-        return redirect()->route('books.index')->with('success', 'Book deleted!');
+        return view('books.inventory', compact('books'));
     }
 
     // === BORROW ===

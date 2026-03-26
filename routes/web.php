@@ -19,6 +19,8 @@ require __DIR__.'/profile.php';
 Route::middleware(['auth', \App\Http\Middleware\EnsureUserIsAdmin::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Inventory must be declared before resource 'books/{book}' to avoid route parameter collision.
+    Route::get('books/inventory', [BookController::class, 'inventory'])->name('books.inventory');
     Route::resource('books', BookController::class);
     Route::get('loans', [LoanController::class, 'index'])->name('loans.index');
     Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
