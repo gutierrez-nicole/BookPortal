@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoanController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReservationController;
-use App\Http\Controllers\ActivityLogController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -29,6 +30,12 @@ Route::middleware(['auth', \App\Http\Middleware\EnsureUserIsAdmin::class])->grou
     Route::post('reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
 
     Route::get('activity', [ActivityLogController::class, 'index'])->name('activity.index');
+
+    // Notifications
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unread-count');
+    Route::patch('notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
+    Route::patch('notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
 
     Route::post('books/{book}/borrow', [BookController::class, 'borrow'])->name('books.borrow');
     Route::post('books/borrow/bulk', [BookController::class, 'borrowBulk'])->name('books.borrow.bulk');

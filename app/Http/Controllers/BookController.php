@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\ActivityLog;
 use App\Models\Book;
 use App\Models\Loan;
+use App\Models\Notification;
 use App\Models\Receipt;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -49,6 +50,13 @@ class BookController extends Controller
             'subject_type' => Book::class,
             'subject_id' => $book->id,
             'metadata' => ['title' => $book->title, 'isbn' => $book->isbn],
+        ]);
+
+        Notification::create([
+            'type' => 'book_added',
+            'title' => 'New Book Added',
+            'message' => "Book '{$book->title}' by {$book->author} has been added to the library.",
+            'data' => ['book_id' => $book->id, 'user_id' => auth()->id()],
         ]);
 
         return redirect()->route('books.index')->with('success', 'Book added successfully!');
@@ -137,6 +145,13 @@ class BookController extends Controller
             'metadata' => ['loan_id' => $loan->id, 'borrower' => $loan->borrower_name],
         ]);
 
+        Notification::create([
+            'type' => 'book_borrowed',
+            'title' => 'Book Borrowed',
+            'message' => "Book '{$book->title}' has been borrowed by {$loan->borrower_name}.",
+            'data' => ['book_id' => $book->id, 'loan_id' => $loan->id, 'user_id' => auth()->id()],
+        ]);
+
         $pdf = Pdf::loadView('pdf.receipt', compact('loan', 'book'));
         return $pdf->download('receipt-'.$loan->id.'.pdf');
     }
@@ -221,6 +236,13 @@ class BookController extends Controller
             'subject_type' => Book::class,
             'subject_id' => $book->id,
             'metadata' => ['loan_id' => $loan->id, 'late_fee' => $lateFee],
+        ]);
+
+        Notification::create([
+            'type' => 'book_returned',
+            'title' => 'Book Returned',
+            'message' => "Book '{$book->title}' has been returned by {$loan->borrower_name}." . ($lateFee > 0 ? " Late fee: ₱" . number_format($lateFee, 2) : ""),
+            'data' => ['book_id' => $book->id, 'loan_id' => $loan->id, 'late_fee' => $lateFee, 'user_id' => auth()->id()],
         ]);
 
         return back()->with('success', 'Book returned! Late fee: ₱'.number_format($lateFee, 2));

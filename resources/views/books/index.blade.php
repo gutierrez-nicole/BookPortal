@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>BookPortal — Books</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -70,6 +71,53 @@
             letter-spacing: 0.12em;
             color: rgba(255,255,255,0.3);
             margin-top: 0.35rem;
+        }
+
+        /* ── Notification Bell ────────────────────────── */
+        .sidebar-notifications {
+            padding: 0 1.75rem 1rem;
+        }
+
+        .notification-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: rgba(255,255,255,0.7);
+            cursor: pointer;
+            transition: all 0.15s;
+            position: relative;
+        }
+
+        .notification-btn:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.2);
+            color: #fff;
+        }
+
+        .notification-icon {
+            width: 20px; height: 20px;
+            flex-shrink: 0;
+        }
+
+        .notification-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+            border: 2px solid var(--ink);
         }
 
         .sidebar-section-label {
@@ -556,6 +604,170 @@
             .main { padding: 1.5rem 1rem 3rem; }
             .filter-grid { grid-template-columns: 1fr; }
         }
+
+        /* ── Modal ────────────────────────────────────── */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(26,23,20,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(26,23,20,0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 6px;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .modal-close:hover {
+            background: var(--rule);
+            color: var(--ink);
+        }
+
+        .modal-body {
+            padding: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--rule);
+            background: #faf8f5;
+            text-align: right;
+        }
+
+        .btn-secondary {
+            padding: 0.5rem 1rem;
+            background: var(--ink);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .btn-secondary:hover { background: #2e2a27; }
+
+        /* ── Notifications List ───────────────────────── */
+        .notifications-list {
+            padding: 0;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--rule);
+            transition: background 0.15s;
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            background: #faf8f5;
+        }
+
+        .notification-item.unread {
+            background: var(--teal-lt);
+            border-left: 4px solid var(--teal);
+        }
+
+        .notification-icon-wrapper {
+            flex-shrink: 0;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .notification-book-added .notification-icon-wrapper { background: var(--teal-lt); color: var(--teal); }
+        .notification-book-borrowed .notification-icon-wrapper { background: var(--gold-lt); color: #8a6115; }
+        .notification-book-returned .notification-icon-wrapper { background: var(--accent-lt); color: var(--accent); }
+
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 0.25rem;
+            line-height: 1.3;
+        }
+
+        .notification-message {
+            font-size: 0.8rem;
+            color: var(--muted);
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-time {
+            font-size: 0.7rem;
+            color: var(--muted);
+            opacity: 0.7;
+        }
+
+        .notification-empty {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--muted);
+        }
+
+        .notification-empty-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.3;
+        }
     </style>
 </head>
 <body>
@@ -568,6 +780,8 @@
         <div class="sidebar-brand-name">Book<em>Portal</em></div>
         <div class="sidebar-brand-sub">Library Management</div>
     </div>
+
+    
 
     <span class="sidebar-section-label">Main</span>
     <ul class="sidebar-nav">
@@ -849,6 +1063,190 @@
     </div>
 
 </main>
+
+{{-- ═══════════════════════════════════════════
+     NOTIFICATION MODAL
+═══════════════════════════════════════════ --}}
+<div id="notification-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Notifications</h3>
+            <button id="close-modal" class="modal-close">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div id="notifications-list" class="notifications-list">
+                <!-- Notifications will be loaded here -->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="mark-all-read" class="btn-secondary">Mark All as Read</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Notification System
+document.addEventListener('DOMContentLoaded', function() {
+    const notificationBtn = document.getElementById('notification-btn');
+    const notificationModal = document.getElementById('notification-modal');
+    const closeModal = document.getElementById('close-modal');
+    const markAllReadBtn = document.getElementById('mark-all-read');
+    const notificationsList = document.getElementById('notifications-list');
+    const notificationCount = document.getElementById('notification-count');
+
+    let notifications = [];
+
+    // Modal controls
+    notificationBtn.addEventListener('click', () => {
+        notificationModal.style.display = 'flex';
+        loadNotifications();
+    });
+
+    closeModal.addEventListener('click', () => {
+        notificationModal.style.display = 'none';
+    });
+
+    notificationModal.addEventListener('click', (e) => {
+        if (e.target === notificationModal) {
+            notificationModal.style.display = 'none';
+        }
+    });
+
+    // Load notifications
+    async function loadNotifications() {
+        try {
+            const response = await fetch('/notifications');
+            const data = await response.json();
+            notifications = data.data;
+            renderNotifications();
+        } catch (error) {
+            console.error('Error loading notifications:', error);
+        }
+    }
+
+    // Render notifications
+    function renderNotifications() {
+        if (notifications.length === 0) {
+            notificationsList.innerHTML = `
+                <div class="notification-empty">
+                    <div class="notification-empty-icon">🔔</div>
+                    <div>No notifications yet</div>
+                </div>
+            `;
+            return;
+        }
+
+        notificationsList.innerHTML = notifications.map(notification => `
+            <div class="notification-item ${!notification.read ? 'unread' : ''} notification-${notification.type}"
+                 data-id="${notification.id}">
+                <div class="notification-icon-wrapper">
+                    ${getNotificationIcon(notification.type)}
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${notification.title}</div>
+                    <div class="notification-message">${notification.message}</div>
+                    <div class="notification-time">${formatTime(notification.created_at)}</div>
+                </div>
+            </div>
+        `).join('');
+
+        // Add click handlers
+        document.querySelectorAll('.notification-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const id = item.dataset.id;
+                markAsRead(id);
+            });
+        });
+    }
+
+    // Get notification icon
+    function getNotificationIcon(type) {
+        switch (type) {
+            case 'book_added': return '📚';
+            case 'book_borrowed': return '📖';
+            case 'book_returned': return '↩️';
+            default: return '🔔';
+        }
+    }
+
+    // Format time
+    function formatTime(dateString) {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diff = now - date;
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(diff / 3600000);
+        const days = Math.floor(diff / 86400000);
+
+        if (minutes < 1) return 'Just now';
+        if (minutes < 60) return `${minutes}m ago`;
+        if (hours < 24) return `${hours}h ago`;
+        return `${days}d ago`;
+    }
+
+    // Mark notification as read
+    async function markAsRead(id) {
+        try {
+            await fetch(`/notifications/${id}/read`, {
+                method: 'PATCH',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                    'Content-Type': 'application/json',
+                },
+            });
+            await loadNotifications();
+            updateUnreadCount();
+        } catch (error) {
+            console.error('Error marking notification as read:', error);
+        }
+    }
+
+    // Mark all as read
+    markAllReadBtn.addEventListener('click', async () => {
+        try {
+            await fetch('/notifications/mark-all-read', {
+                method: 'PATCH',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                    'Content-Type': 'application/json',
+                },
+            });
+            await loadNotifications();
+            updateUnreadCount();
+        } catch (error) {
+            console.error('Error marking all notifications as read:', error);
+        }
+    });
+
+    // Update unread count
+    async function updateUnreadCount() {
+        try {
+            const response = await fetch('/notifications/unread-count');
+            const data = await response.json();
+            const count = data.count;
+
+            if (count > 0) {
+                notificationCount.textContent = count > 99 ? '99+' : count;
+                notificationCount.style.display = 'block';
+            } else {
+                notificationCount.style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Error updating unread count:', error);
+        }
+    }
+
+    // Initial load
+    updateUnreadCount();
+
+    // Poll for new notifications every 30 seconds
+    setInterval(updateUnreadCount, 30000);
+});
+</script>
 
 </body>
 </html>
