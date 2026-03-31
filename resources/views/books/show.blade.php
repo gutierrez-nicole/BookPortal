@@ -885,62 +885,107 @@
             </div>
 
             {{-- Borrow / Return card --}}
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-header-icon {{ $book->available ? 'teal' : 'gold' }}">
-                        {{ $book->available ? '📖' : '⏳' }}
-                    </div>
-                    <span class="card-title">
-                        {{ $book->available ? 'Lend This Book' : 'Currently Borrowed' }}
-                    </span>
-                </div>
-                <div class="card-body">
+<div class="card">
+    <div class="card-header">
+        <div class="card-header-icon {{ $book->available ? 'teal' : 'gold' }}">
+            {{ $book->available ? '📖' : '⏳' }}
+        </div>
+        <span class="card-title">
+            {{ $book->available ? 'Lend This Book' : 'Currently Borrowed' }}
+        </span>
+    </div>
+    <div class="card-body">
 
-                    @if($book->available)
-                        {{-- Borrow form --}}
-                        <form method="POST" action="{{ route('books.borrow', $book) }}" class="borrow-form">
-                            @csrf
-                            <div class="borrow-form-row">
-                                <div>
-                                    <label class="field-label" for="borrower_name">Borrower Name <span style="color:var(--accent)">*</span></label>
-                                    <input
-                                        id="borrower_name" name="borrower_name" type="text"
-                                        class="field-input"
-                                        value="{{ old('borrower_name') }}"
-                                        placeholder="Full name of borrower"
-                                        required
-                                    />
-                                    @error('borrower_name')
-                                        <div class="field-error">
-                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                                <div>
-                                    <label class="field-label" for="due_date">Due Date <span style="color:var(--accent)">*</span></label>
-                                    <input
-                                        id="due_date" name="due_date" type="date"
-                                        class="field-input"
-                                        value="{{ old('due_date') }}"
-                                        min="{{ now()->addDay()->toDateString() }}"
-                                        required
-                                    />
-                                    @error('due_date')
-                                        <div class="field-error">
-                                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
+        @if($book->available)
+            {{-- Borrow form --}}
+            <form method="POST" action="{{ route('books.borrow', $book) }}" class="borrow-form">
+                @csrf
+
+                {{-- Name fields row --}}
+                <div class="borrow-form-row" style="grid-template-columns: 1fr 1fr auto; align-items: start;">
+
+                    <div>
+                        <label class="field-label" for="last_name">Last Name <span style="color:var(--accent)">*</span></label>
+                        <input
+                            id="last_name" name="last_name" type="text"
+                            class="field-input"
+                            value="{{ old('last_name') }}"
+                            placeholder="e.g. Dela Cruz"
+                            required
+                        />
+                        @error('last_name')
+                            <div class="field-error">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                {{ $message }}
                             </div>
-                            <div style="display:flex; justify-content:flex-end;">
-                                <button type="submit" class="btn-borrow">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
-                                    Borrow Book
-                                </button>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="field-label" for="first_name">First Name <span style="color:var(--accent)">*</span></label>
+                        <input
+                            id="first_name" name="first_name" type="text"
+                            class="field-input"
+                            value="{{ old('first_name') }}"
+                            placeholder="e.g. Juan"
+                            required
+                        />
+                        @error('first_name')
+                            <div class="field-error">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                {{ $message }}
                             </div>
-                        </form>
+                        @enderror
+                    </div>
+
+                    <div style="min-width: 70px;">
+                        <label class="field-label" for="middle_initial">M.I.</label>
+                        <input
+                            id="middle_initial" name="middle_initial" type="text"
+                            class="field-input"
+                            value="{{ old('middle_initial') }}"
+                            placeholder="e.g. S."
+                            maxlength="2"
+                            style="text-transform: uppercase;"
+                        />
+                        @error('middle_initial')
+                            <div class="field-error">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                </div>
+
+                {{-- Due date + Submit row --}}
+                <div class="borrow-form-row" style="align-items: start;">
+                    <div>
+                        <label class="field-label" for="due_date">Due Date <span style="color:var(--accent)">*</span></label>
+                        <input
+                            id="due_date" name="due_date" type="date"
+                            class="field-input"
+                            value="{{ old('due_date') }}"
+                            min="{{ now()->addDay()->toDateString() }}"
+                            required
+                        />
+                        @error('due_date')
+                            <div class="field-error">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div style="display:flex; justify-content:flex-end; align-items:flex-end; height:100%; padding-top: 1.4rem;">
+                        <button type="submit" class="btn-borrow">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+                            Borrow Book
+                        </button>
+                    </div>
+                </div>
+
+            </form>
 
                     @else
                         {{-- Borrowed state --}}

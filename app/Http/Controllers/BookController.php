@@ -7,10 +7,56 @@ use App\Models\Loan;
 use App\Models\Notification;
 use App\Models\Receipt;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class BookController extends Controller
 {
+    protected function getAuthorNameParts(Book $book): array
+    {
+        if ($book->last_name || $book->first_name || $book->middle_initial) {
+            return [
+                'last_name' => $book->last_name,
+                'first_name' => $book->first_name,
+                'middle_initial' => $book->middle_initial,
+            ];
+        }
+
+        $parts = preg_split('/\s+/', trim((string) $book->author)) ?: [];
+
+        return [
+            'first_name' => $parts[0] ?? '',
+            'last_name' => count($parts) > 1 ? end($parts) : '',
+            'middle_initial' => count($parts) > 2 ? strtoupper(substr($parts[1], 0, 1)) : '',
+        ];
+    }
+
+    protected function formatAuthorName(array $data): string
+    {
+        $middleInitial = trim((string) ($data['middle_initial'] ?? ''));
+        $middleInitial = $middleInitial !== '' ? strtoupper(rtrim($middleInitial, '.')) . '.' : '';
+
+        return trim(implode(' ', array_filter([
+            trim((string) ($data['first_name'] ?? '')),
+            $middleInitial,
+            trim((string) ($data['last_name'] ?? '')),
+        ])));
+    }
+
+    protected function formatBorrowerName(array $data): string
+    {
+        if (!empty($data['borrower_name'])) {
+            return trim((string) $data['borrower_name']);
+        }
+
+        $middleInitial = trim((string) ($data['middle_initial'] ?? ''));
+        $middleInitial = $middleInitial !== '' ? strtoupper(rtrim($middleInitial, '.')) . '.' : '';
+
+        return trim(implode(' ', array_filter([
+            trim((string) ($data['first_name'] ?? '')),
+            $middleInitial,
+            trim((string) ($data['last_name'] ?? '')),
+        ])));
+    }
+
     public function index(Request $request)
     {
         $books = Book::query()
@@ -32,11 +78,15 @@ class BookController extends Controller
     {
         $data = $request->validate([
             'title' => 'required',
-            'author' => 'required',
+            'last_name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'middle_initial' => 'nullable|string|max:5',
             'genre' => 'required',
             'isbn' => 'required|unique:books',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        $data['author'] = $this->formatAuthorName($data);
 
         if ($request->hasFile('cover_image')) {
             $data['cover_image'] = $request->file('cover_image')->store('covers', 'public');
@@ -69,18 +119,24 @@ class BookController extends Controller
 
     public function edit(Book $book)
     {
-        return view('books.edit', compact('book'));
+        $authorNameParts = $this->getAuthorNameParts($book);
+
+        return view('books.edit', compact('book', 'authorNameParts'));
     }
 
     public function update(Request $request, Book $book)
     {
         $data = $request->validate([
             'title' => 'required',
-            'author' => 'required',
+            'last_name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'middle_initial' => 'nullable|string|max:5',
             'genre' => 'required',
             'isbn' => 'required|unique:books,isbn,'.$book->id,
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
+
+        $data['author'] = $this->formatAuthorName($data);
 
         if ($request->hasFile('cover_image')) {
             // Delete the previous cover file when replacing it to keep storage clean.
@@ -119,10 +175,21 @@ class BookController extends Controller
     // === BORROW ===
     public function borrow(Request $request, Book $book)
     {
-        $request->validate([
-            'borrower_name' => 'required',
+        $data = $request->validate([
+            'borrower_name' => 'nullable|string|max:255',
+            'last_name' => 'required_without:borrower_name|string|max:255',
+            'first_name' => 'required_without:borrower_name|string|max:255',
+            'middle_initial' => 'nullable|string|max:5',
             'due_date' => 'required|date|after:today',
         ]);
+
+        $borrowerName = $this->formatBorrowerName($data);
+
+        if ($borrowerName === '') {
+            return back()
+                ->withErrors(['borrower_name' => 'Borrower name is required.'])
+                ->withInput();
+        }
 
         if (!$book->available) {
             return back()->with('error', 'Book is not available!');
@@ -130,9 +197,9 @@ class BookController extends Controller
 
         $loan = Loan::create([
             'book_id' => $book->id,
-            'borrower_name' => $request->borrower_name,
+            'borrower_name' => $borrowerName,
             'borrowed_at' => now(),
-            'due_date' => $request->due_date,
+            'due_date' => $data['due_date'],
         ]);
 
         $book->update(['available' => false]);
@@ -152,8 +219,9 @@ class BookController extends Controller
             'data' => ['book_id' => $book->id, 'loan_id' => $loan->id, 'user_id' => auth()->id()],
         ]);
 
-        $pdf = Pdf::loadView('pdf.receipt', compact('loan', 'book'));
-        return $pdf->download('receipt-'.$loan->id.'.pdf');
+        return redirect()
+            ->route('books.show', $book)
+            ->with('success', "Book borrowed successfully by {$loan->borrower_name}.");
     }
 
     // === BULK BORROW ===

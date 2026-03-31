@@ -634,26 +634,70 @@
                         @enderror
                     </div>
 
-                    {{-- Author --}}
-                    <div class="field">
-                        <label class="field-label" for="author">
-                            Author <span class="required">*</span>
-                        </label>
-                        <input
-                            id="author"
-                            name="author"
-                            type="text"
-                            class="field-input {{ $errors->has('author') ? 'has-error' : '' }}"
-                            value="{{ old('author') }}"
-                            placeholder="e.g. F. Scott Fitzgerald"
-                            required
-                        />
-                        @error('author')
-                            <div class="field-error">
-                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                                {{ $message }}
-                            </div>
-                        @enderror
+                    {{-- Author name --}}
+                    <div class="field-row" style="grid-template-columns: 1fr 1fr 120px;">
+                        <div class="field">
+                            <label class="field-label" for="last_name">
+                                Last Name <span class="required">*</span>
+                            </label>
+                            <input
+                                id="last_name"
+                                name="last_name"
+                                type="text"
+                                class="field-input {{ $errors->has('last_name') ? 'has-error' : '' }}"
+                                value="{{ old('last_name') }}"
+                                placeholder="e.g. Fitzgerald"
+                                required
+                            />
+                            @error('last_name')
+                                <div class="field-error">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <div class="field">
+                            <label class="field-label" for="first_name">
+                                First Name <span class="required">*</span>
+                            </label>
+                            <input
+                                id="first_name"
+                                name="first_name"
+                                type="text"
+                                class="field-input {{ $errors->has('first_name') ? 'has-error' : '' }}"
+                                value="{{ old('first_name') }}"
+                                placeholder="e.g. Francis"
+                                required
+                            />
+                            @error('first_name')
+                                <div class="field-error">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <div class="field">
+                            <label class="field-label" for="middle_initial">
+                                M.I.
+                            </label>
+                            <input
+                                id="middle_initial"
+                                name="middle_initial"
+                                type="text"
+                                class="field-input {{ $errors->has('middle_initial') ? 'has-error' : '' }}"
+                                value="{{ old('middle_initial') }}"
+                                placeholder="e.g. S"
+                                maxlength="5"
+                            />
+                            @error('middle_initial')
+                                <div class="field-error">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
                     </div>
 
                     {{-- Genre + ISBN side by side --}}

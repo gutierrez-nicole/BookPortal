@@ -7,7 +7,7 @@ class Book extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title','author','genre','isbn','cover_image','available'];
+    protected $fillable = ['title','author','last_name','first_name','middle_initial','genre','isbn','cover_image','available'];
 
     protected $casts = [
         'available' => 'boolean',
